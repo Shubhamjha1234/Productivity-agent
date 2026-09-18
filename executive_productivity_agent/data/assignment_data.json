@@ -1,0 +1,167 @@
+{
+  "metadata": {
+    "target_user": "Arjun Malhotra",
+    "role": "VP Sales",
+    "company": "TechNova Solutions",
+    "reference_date": "2025-10-15T09:00:00",
+    "reference_day": "Wednesday"
+  },
+  "emails": [
+    {
+      "id": "email-001",
+      "date": "2025-10-13T16:30:00",
+      "from": "Raghav Sharma <raghav@technova.com>",
+      "to": "Arjun Malhotra <arjun@technova.com>",
+      "subject": "Follow-up: Vendor evaluation list & Q4 procurement",
+      "body": "Hi Arjun, following up on our sync earlier today. We really need the finalized vendor evaluation list to sign off on our Q4 tech stack. Please let me know when you can send this over.",
+      "thread": [
+        {
+          "from": "Arjun Malhotra <arjun@technova.com>",
+          "date": "2025-10-13T17:15:00",
+          "body": "Hi Raghav, understood. I will review the commercial terms and send the updated vendor list to you by Wednesday morning without delay."
+        }
+      ]
+    },
+    {
+      "id": "email-002",
+      "date": "2025-10-15T08:15:00",
+      "from": "Arjun Malhotra <arjun@technova.com>",
+      "to": "Raghav Sharma <raghav@technova.com>",
+      "subject": "Q3 Enterprise Sales Deck",
+      "body": "Hi Raghav, I am putting final touches on the slide numbers. I will share the finalized Q3 Enterprise Sales deck with you today by 5:00 PM so you have it ahead of tomorrow's product review."
+    },
+    {
+      "id": "email-003",
+      "date": "2025-10-14T14:20:00",
+      "from": "Priya Nair <priya.nair@technova.com>",
+      "to": "Arjun Malhotra <arjun@technova.com>",
+      "subject": "RE: Enterprise discount approval for Zenith Corp",
+      "body": "Hi Arjun, regarding your request for a 25% custom discount on the Zenith Corp 3-year contract: I am running the margin impact model with the CFO today. I will send you the final discount approval decision by Thursday 3:00 PM."
+    },
+    {
+      "id": "email-004",
+      "date": "2025-10-14T11:00:00",
+      "from": "Marcus Vance <marcus.vance@technova.com>",
+      "to": "Sales & Marketing Team <sales-all@technova.com>",
+      "subject": "Urgent: CRM duplicate lead audit needed",
+      "body": "Team, we noticed severe duplication in incoming Enterprise leads across West and South territories. Someone needs to audit duplicate CRM lead records and update territory mapping before end of week. Please coordinate internally."
+    },
+    {
+      "id": "email-005",
+      "date": "2025-10-14T18:45:00",
+      "from": "Sarah Jenkins <sarah.jenkins@technova.com>",
+      "to": "Arjun Malhotra <arjun@technova.com>",
+      "subject": "Apex Tech Renewal Presentation - Schedule Change",
+      "body": "Hi Arjun, the client contact at Apex Tech just reached out requesting to reschedule our annual renewal presentation to Thursday at 2:00 PM due to a board meeting conflict on Friday. Please update your prep accordingly."
+    },
+    {
+      "id": "email-006",
+      "date": "2025-10-12T10:00:00",
+      "from": "Maya Lin <maya.lin@technova.com>",
+      "to": "Arjun Malhotra <arjun@technova.com>",
+      "subject": "Speaker invitation: APAC Tech Summit next month",
+      "body": "Hi Arjun, the organizers of the APAC Tech Summit asked if you would be open to delivering a 20-minute keynote on Enterprise AI Sales on Nov 12. Let me know if you would like me to put your name forward."
+    },
+    {
+      "id": "email-007",
+      "date": "2025-10-15T08:45:00",
+      "from": "Arjun Malhotra <arjun@technova.com>",
+      "to": "Karthik Rajan <karthik.rajan@technova.com>",
+      "subject": "Intro: Acme Corp procurement team",
+      "body": "Hi Karthik, as promised during Monday's standup, I have just sent over the warm intro email connecting you with the Acme Corp procurement lead. All done on my end."
+    }
+  ],
+  "meeting_transcripts": [
+    {
+      "id": "meeting-001",
+      "title": "Executive Leadership Sync",
+      "date": "2025-10-13T10:00:00",
+      "attendees": [
+        "Vikram Mehta (CEO)",
+        "Arjun Malhotra (VP Sales)",
+        "Raghav Sharma (VP Product)",
+        "Priya Nair (Head of Finance)"
+      ],
+      "transcript": [
+        "Vikram: Good morning team. Let's run through key deliverables for this week.",
+        "Raghav: On product procurement, Arjun, we need the updated vendor list to lock in our Q4 tooling contracts. When can you deliver it?",
+        "Arjun: I am reviewing the final supplier pricing today. I agreed to send the updated vendor list to Raghav by Wednesday morning.",
+        "Vikram: Good. Arjun, where do we stand on the Enterprise Q3 headcount budget proposal? HR needs that urgently.",
+        "Arjun: I will submit the finalized Enterprise Q3 headcount budget proposal to you and HR by yesterday Tuesday at 4:00 PM.",
+        "Priya: Great. Also, regarding the Acme Corp annual renewal agreement, legal gave the final sign-off.",
+        "Arjun: Perfect. I will review and sign the Acme Corp renewal contract today by 5:00 PM.",
+        "Vikram: Excellent, let's keep the momentum."
+      ]
+    },
+    {
+      "id": "meeting-002",
+      "title": "Product-Sales Alignment Review",
+      "date": "2025-10-14T15:00:00",
+      "attendees": [
+        "Arjun Malhotra (VP Sales)",
+        "Raghav Sharma (VP Product)",
+        "Dev Lead",
+        "Sales Ops"
+      ],
+      "transcript": [
+        "Arjun: Raghav, our enterprise clients are asking about the new API endpoints before committing to annual renewals.",
+        "Raghav: Understood Arjun. I will share the Q4 API Roadmap draft with Arjun by Thursday 12:00 PM so you can share it with tier-1 accounts.",
+        "Dev Lead: Also team, we noticed our sales stage definitions in Salesforce are completely out of sync with engineering delivery stages.",
+        "Sales Ops: Yes, we need someone to fix the inconsistent sales stage definitions in Salesforce before next month's forecast.",
+        "Arjun: We should address that soon. Let's table who handles it for the ops review."
+      ]
+    }
+  ],
+  "calendar_events": [
+    {
+      "id": "cal-001",
+      "title": "Contract Signing: Acme Corp Enterprise Agreement",
+      "start": "2025-10-15T16:30:00",
+      "end": "2025-10-15T17:00:00",
+      "attendees": [
+        "Arjun Malhotra",
+        "Legal Counsel"
+      ],
+      "description": "Executive signing session for Acme Corp enterprise agreement renewal before 5:00 PM deadline."
+    },
+    {
+      "id": "cal-002",
+      "title": "Apex Tech Renewal Presentation",
+      "start": "2025-10-17T10:00:00",
+      "end": "2025-10-17T11:00:00",
+      "attendees": [
+        "Arjun Malhotra",
+        "Sarah Jenkins",
+        "Apex Tech Account Team"
+      ],
+      "description": "Annual enterprise contract renewal presentation with Apex Tech decision makers scheduled for Friday at 10:00 AM."
+    },
+    {
+      "id": "cal-003",
+      "title": "1:1 Sync: Arjun Malhotra & Raghav Sharma",
+      "start": "2025-10-16T11:00:00",
+      "end": "2025-10-16T11:30:00",
+      "attendees": [
+        "Arjun Malhotra",
+        "Raghav Sharma"
+      ],
+      "description": "Weekly 1:1 sync to review Q4 API roadmap and vendor evaluation list status."
+    }
+  ],
+  "voice_notes": [
+    {
+      "id": "voice-001",
+      "title": "Morning Commute Note - Oct 14",
+      "recorded_at": "2025-10-14T08:15:00",
+      "speaker": "Arjun Malhotra",
+      "transcript": "Quick note to self on the drive in: I promised Raghav the updated vendor list by Wednesday morning. Need to make sure I finish that first thing tomorrow morning so product is unblocked. Also need to check on the headcount budget proposal."
+    },
+    {
+      "id": "voice-002",
+      "title": "Voice Memo between client calls - Oct 14",
+      "recorded_at": "2025-10-14T16:45:00",
+      "speaker": "Arjun Malhotra",
+      "transcript": "Note to self: I am waiting on Priya from Finance for the 25 percent discount approval on the Zenith Corp deal. She said she will have it by Thursday 3 PM. Cannot send the proposal until she gives the go-ahead."
+    }
+  ]
+}

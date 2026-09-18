@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentation: Executive Productivity Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-space: #06080d;
+      --bg-card: rgba(15, 20, 32, 0.85);
+      --bg-card-border: rgba(255, 255, 255, 0.08);
+      --accent-blue: #38bdf8;
+      --accent-indigo: #818cf8;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #fb7185;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-title: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-space);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Lighting */
+    .ambient-glow {
+      position: fixed;
+      width: 700px;
+      height: 400px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(120px);
+    }
+    .glow-top { top: -100px; left: 15%; background: rgba(56, 189, 248, 0.12); }
+    .glow-bottom { bottom: -100px; right: 15%; background: rgba(129, 140, 248, 0.1); }
+
+    /* Top Presentation Bar */
+    .pres-header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 36px;
+      border-bottom: 1px solid var(--bg-card-border);
+      background: rgba(6, 8, 13, 0.75);
+      backdrop-filter: blur(16px);
+    }
+
+    .pres-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-title);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+
+    .brand-prism {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-prism svg { width: 16px; height: 16px; stroke: var(--accent-blue); }
+
+    .pres-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--bg-card-border);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: rgba(56, 189, 248, 0.15); border-color: var(--accent-blue); }
+
+    .slide-counter {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-blue);
+      font-weight: 600;
+      padding: 4px 10px;
+      background: rgba(56, 189, 248, 0.08);
+      border-radius: 12px;
+    }
+
+    /* Main Slide Container */
+    .deck-viewport {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 40px;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1180px;
+      height: 600px;
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 20px;
+      padding: 44px 52px;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 1px rgba(255, 255, 255, 0.1) inset;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .slide.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Typography & Hierarchy */
+    .slide-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-blue);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slide-tag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      box-shadow: 0 0 8px var(--accent-blue);
+    }
+
+    .slide-heading {
+      font-family: var(--font-title);
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .slide-subheading {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 18px;
+      border-top: 1px solid var(--bg-card-border);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Grid Layouts */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      height: 100%;
+      align-items: center;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .four-col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    /* Cards inside slides */
+    .card-box {
+      background: rgba(10, 14, 22, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .card-box-header {
+      font-family: var(--font-title);
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .bullet-list li {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+    .bullet-list li::before {
+      content: '▹';
+      color: var(--accent-blue);
+      font-size: 12px;
+      margin-top: 1px;
+    }
+
+    /* Diagram Pill Pipeline */
+    .pipeline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(10, 14, 22, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+
+    .pipe-node {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-align: center;
+      flex: 1;
+    }
+    .pipe-node.highlight {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .pipe-node.highlight-indigo {
+      background: rgba(129, 140, 248, 0.12);
+      border-color: rgba(129, 140, 248, 0.4);
+    }
+
+    .pipe-label {
+      font-family: var(--font-title);
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .pipe-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .pipe-arrow {
+      color: var(--accent-blue);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* Bottom progress bar */
+    .progress-bar-wrap {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 20;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-indigo));
+      width: 14.28%;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+
+  <!-- Header Controls -->
+  <div class="pres-header">
+    <div class="pres-brand">
+      <div class="brand-prism">
+        <svg viewBox="0 0 24 24" fill="none"><polygon points="12 2 2 8.5 12 15 22 8.5 12 2"></polygon><polygon points="2 15.5 12 22 22 15.5"></polygon></svg>
+      </div>
+      <span>Executive Productivity Agent · Technical Briefing</span>
+    </div>
+
+    <div class="pres-actions">
+      <button class="nav-btn" onclick="prevSlide()" id="prevBtn">← Prev</button>
+      <span class="slide-counter" id="slideIndicator">1 / 7</span>
+      <button class="nav-btn" onclick="nextSlide()" id="nextBtn">Next →</button>
+      <a href="/" class="nav-btn" style="text-decoration: none; color: var(--accent-blue);">Open Dashboard ↗</a>
+    </div>
+  </div>
+
+  <!-- Deck Viewport -->
+  <div class="deck-viewport">
+
+    <!-- SLIDE 1 - TITLE -->
+    <div class="slide active" id="slide-1">
+      <div>
+        <div class="slide-tag">PROJECT PRESENTATION · TECHNICAL OVERVIEW</div>
+        <div class="slide-heading" style="font-size: 42px;">Executive Productivity Agent</div>
+        <div class="slide-subheading" style="font-size: 18px; color: var(--accent-blue);">
+          AI-Powered Autonomous Executive Assistant using Google ADK, n8n & RAG
+        </div>
+      </div>
+
+      <div class="two-col" style="margin: 10px 0;">
+        <div class="card-box" style="padding: 24px;">
+          <div class="card-box-header" style="color: var(--accent-blue);">Integrated Capabilities</div>
+          <ul class="bullet-list">
+            <li><strong>AI Agent Engine:</strong> Google Agent Development Kit (ADK) & Gemini</li>
+            <li><strong>Workflow Automation:</strong> n8n Orchestration Layer</li>
+            <li><strong>Company Knowledge:</strong> Retrieval-Augmented Generation (RAG)</li>
+            <li><strong>Enterprise Channels:</strong> Gmail, Google Calendar, Meetings, Audio</li>
+            <li><strong>Dashboard Frontend:</strong> Modern HTML5, CSS3, ES6 JavaScript</li>
+          </ul>
+        </div>
+
+        <div class="card-box" style="padding: 24px; border-left: 3px solid var(--accent-indigo);">
+          <div class="card-box-header" style="color: #ffffff;">Project Metadata</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px; font-size: 13.5px;">
+            <div><span style="color: var(--text-dim); text-transform: uppercase; font-size: 11px; font-family: var(--font-mono);">Engineer</span><br><strong style="color: #ffffff; font-size: 15px;">Shubham Jha</strong></div>
+            <div><span style="color: var(--text-dim); text-transform: uppercase; font-size: 11px; font-family: var(--font-mono);">Domain</span><br><strong style="color: #ffffff;">Executive AI Agent Systems & Workflow Automation</strong></div>
+            <div><span style="color: var(--text-dim); text-transform: uppercase; font-size: 11px; font-family: var(--font-mono);">Target Persona</span><br><strong style="color: #ffffff;">Arjun Malhotra — VP Sales (TechNova Solutions)</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Slide 1 of 7 · Press Space or Arrow Keys to navigate</span>
+        <span style="font-family: var(--font-mono); color: var(--accent-emerald);">● Production Ready Prototype</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 - PROBLEM & OBJECTIVE -->
+    <div class="slide" id="slide-2">
+      <div>
+        <div class="slide-tag">BUSINESS CHALLENGE</div>
+        <div class="slide-heading">The Executive Cognitive Bottleneck</div>
+        <div class="slide-subheading">Scattered multi-channel communications create decision fatigue and missed commitments.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card-box" style="border-top: 3px solid var(--accent-rose);">
+          <div class="card-box-header" style="color: #fca5a5;">The Problem</div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Executives lose hours daily to fragmented administrative overhead:</p>
+          <ul class="bullet-list">
+            <li><strong>Email Triage:</strong> Buried client requests, contract approvals, threads.</li>
+            <li><strong>Calendar Friction:</strong> Scheduling conflicts between email and invites.</li>
+            <li><strong>Meeting Follow-ups:</strong> Verbal promises lost in meeting transcripts.</li>
+            <li><strong>Scattered Context:</strong> Information trapped in silos without unified truth.</li>
+          </ul>
+        </div>
+
+        <div class="card-box" style="border-top: 3px solid var(--accent-emerald);">
+          <div class="card-box-header" style="color: #6ee7b7;">The Objective</div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">A single intelligent interface that autonomously unifies enterprise channels:</p>
+          <ul class="bullet-list">
+            <li><strong>Extract & Deduplicate:</strong> Turn messy communication into one brief.</li>
+            <li><strong>Conflict Detection:</strong> Flag discrepancies (e.g. Email vs. Calendar).</li>
+            <li><strong>Track Ownership:</strong> Never guess owners; isolate unassigned items.</li>
+            <li><strong>Natural Language Q&A:</strong> Answer exact executive inquiries with citations.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pipeline-row" style="margin-top: 14px;">
+        <div class="pipe-node"><div class="pipe-label">Emails</div><div class="pipe-sub">Threads & Proposals</div></div>
+        <div class="pipe-arrow">+</div>
+        <div class="pipe-node"><div class="pipe-label">Transcripts</div><div class="pipe-sub">Leadership Syncs</div></div>
+        <div class="pipe-arrow">+</div>
+        <div class="pipe-node"><div class="pipe-label">Calendar</div><div class="pipe-sub">Events & Invites</div></div>
+        <div class="pipe-arrow">+</div>
+        <div class="pipe-node"><div class="pipe-label">Audio Memos</div><div class="pipe-sub">Voice Dictations</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node highlight"><div class="pipe-label">Executive AI Assistant</div><div class="pipe-sub">Unified Daily Brief</div></div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Slide 2 of 7</span>
+        <span>Goal: Eliminate information fragmentation without hallucination</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 - PROPOSED SOLUTION -->
+    <div class="slide" id="slide-3">
+      <div>
+        <div class="slide-tag">SYSTEM ARCHITECTURE</div>
+        <div class="slide-heading">Proposed Solution: Google ADK + n8n</div>
+        <div class="slide-subheading">Combining autonomous agent reasoning with deterministic workflow automation.</div>
+      </div>
+
+      <div class="three-col" style="margin-bottom: 14px;">
+        <div class="card-box" style="border-top: 3px solid var(--accent-blue);">
+          <div class="card-box-header">1. Google ADK</div>
+          <div style="font-size: 12px; color: var(--accent-blue); font-family: var(--font-mono); margin-bottom: 6px;">AI AGENT REASONING</div>
+          <ul class="bullet-list">
+            <li>Complex intent understanding</li>
+            <li>Grounded tool orchestration</li>
+            <li>Strict anti-hallucination guardrails</li>
+            <li>Gemini 3.6 Flash reasoning</li>
+          </ul>
+        </div>
+
+        <div class="card-box" style="border-top: 3px solid var(--accent-amber);">
+          <div class="card-box-header">2. n8n Automation</div>
+          <div style="font-size: 12px; color: var(--accent-amber); font-family: var(--font-mono); margin-bottom: 6px;">INTEGRATION LAYER</div>
+          <ul class="bullet-list">
+            <li>Gmail & Calendar sync workflows</li>
+            <li>RAG retrieval pipelines</li>
+            <li>Human-in-the-Loop approval nodes</li>
+            <li>Webhook event triggers</li>
+          </ul>
+        </div>
+
+        <div class="card-box" style="border-top: 3px solid var(--accent-emerald);">
+          <div class="card-box-header">3. Executive UI</div>
+          <div style="font-size: 12px; color: var(--accent-emerald); font-family: var(--font-mono); margin-bottom: 6px;">HTML5 / CSS / JS</div>
+          <ul class="bullet-list">
+            <li>Bespoke executive KPI dashboard</li>
+            <li>6-section action item brief</li>
+            <li>Conflict alert decision banner</li>
+            <li>Conversational Q&A console</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pipeline-row">
+        <div class="pipe-node highlight"><div class="pipe-label">Executive UI</div><div class="pipe-sub">HTML/CSS/JS Dashboard</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node highlight-indigo"><div class="pipe-label">Google ADK Agent</div><div class="pipe-sub">Reasoning & Tools</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node"><div class="pipe-label">n8n Automation</div><div class="pipe-sub">Workflow Orchestration</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node"><div class="pipe-label">Enterprise Systems</div><div class="pipe-sub">Gmail | Calendar | RAG | Tasks</div></div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Slide 3 of 7</span>
+        <span>Deterministic execution + cognitive agent intelligence</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 - TECHNOLOGY STACK -->
+    <div class="slide" id="slide-4">
+      <div>
+        <div class="slide-tag">TECHNOLOGY STACK</div>
+        <div class="slide-heading">Layered Enterprise Architecture</div>
+        <div class="slide-subheading">A modular, production-grade stack prioritizing speed, safety, and traceability.</div>
+      </div>
+
+      <div class="four-col" style="margin-bottom: 12px;">
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-blue);">Frontend</div>
+          <ul class="bullet-list">
+            <li>HTML5 Semantic Markup</li>
+            <li>Vanilla Modern CSS</li>
+            <li>Glassmorphism Surfaces</li>
+            <li>ES6 Reactive JavaScript</li>
+          </ul>
+        </div>
+
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-indigo);">AI & Agent</div>
+          <ul class="bullet-list">
+            <li>Google ADK (v2.9.1)</li>
+            <li>Gemini 3.6 Flash</li>
+            <li>google-genai SDK</li>
+            <li>InMemorySessionService</li>
+          </ul>
+        </div>
+
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-amber);">Automation</div>
+          <ul class="bullet-list">
+            <li>n8n Cloud Workflows</li>
+            <li>Google Workspace API</li>
+            <li>Gmail Connector</li>
+            <li>Calendar Connector</li>
+          </ul>
+        </div>
+
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-emerald);">Knowledge & RAG</div>
+          <ul class="bullet-list">
+            <li>Vector DB / Pinecone</li>
+            <li>Semantic Embeddings</li>
+            <li>Document Grounding</li>
+            <li>Human-in-the-Loop Node</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-box" style="padding: 14px 20px; background: rgba(56, 189, 248, 0.04); border-color: rgba(56, 189, 248, 0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px;">
+          <span><strong>Memory & Tooling:</strong> Astral <code>uv</code> Package Manager · Pytest Test Suite (13 tests) · FastAPI ASGI Backend</span>
+          <span style="color: var(--accent-emerald); font-weight: 600;">Zero Hallucination Guaranteed</span>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Slide 4 of 7</span>
+        <span>Built on official Google ADK & FastAPI infrastructure</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 - SYSTEM ARCHITECTURE DIAGRAM -->
+    <div class="slide" id="slide-5">
+      <div>
+        <div class="slide-tag">END-TO-END FLOW</div>
+        <div class="slide-heading">System Architecture & Governance</div>
+        <div class="slide-subheading">Safe execution pipeline with Human-in-the-Loop verification before consequential actions.</div>
+      </div>
+
+      <div class="pipeline-row" style="padding: 12px 16px;">
+        <div class="pipe-node" style="flex: 0.8;"><div class="pipe-label">Executive</div><div class="pipe-sub">Natural Query</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node" style="flex: 1.1;"><div class="pipe-label">UI Dashboard</div><div class="pipe-sub">HTML / CSS / JS</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node" style="flex: 1.1;"><div class="pipe-label">Backend API</div><div class="pipe-sub">FastAPI / Uvicorn</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node highlight" style="flex: 1.3;"><div class="pipe-label">Google ADK Agent</div><div class="pipe-sub">Gemini Reasoning</div></div>
+        <div class="pipe-arrow">➔</div>
+        <div class="pipe-node highlight-indigo" style="flex: 1.3;"><div class="pipe-label">n8n Orchestration</div><div class="pipe-sub">Workflow Routing</div></div>
+      </div>
+
+      <div class="three-col" style="margin: 12px 0;">
+        <div class="card-box">
+          <div class="card-box-header">Gmail Workflow</div>
+          <p style="font-size: 12px; color: var(--text-muted);">Email extraction, recipient matching, response drafting.</p>
+        </div>
+        <div class="card-box">
+          <div class="card-box-header">Calendar Workflow</div>
+          <p style="font-size: 12px; color: var(--text-muted);">Availability detection, schedule conflict checks, booking.</p>
+        </div>
+        <div class="card-box">
+          <div class="card-box-header">RAG Knowledge</div>
+          <p style="font-size: 12px; color: var(--text-muted);">Company documents, contracts, vector search over transcripts.</p>
+        </div>
+      </div>
+
+      <div class="card-box" style="padding: 12px 18px; border-left: 3px solid var(--accent-amber); display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 13px; color: #ffffff;"><strong>Human-in-the-Loop Gate:</strong> Consequential actions (sending emails, committing budget) require explicit executive approval.</span>
+        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-amber);">SAFETY COMPLIANT</span>
+      </div>
+
+      <div class="slide-footer">
+        <span>Slide 5 of 7</span>
+        <span>Clean separation of concerns: Reasoning (ADK) + Action (n8n) + Control (Human)</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6 - KEY USE CASE -->
+    <div class="slide" id="slide-6">
+      <div>
+        <div class="slide-tag">PRACTICAL DEMONSTRATION</div>
+        <div class="slide-heading">End-to-End Executive Workflow</div>
+        <div class="slide-subheading">How the agent processes complex requests across disconnected systems.</div>
+      </div>
+
+      <div class="card-box" style="margin-bottom: 16px; border-left: 3px solid var(--accent-blue);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-blue); text-transform: uppercase;">Use Case Scenario</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Context Synthesis</span>
+        </div>
+        <div style="font-size: 16px; font-weight: 700; color: #ffffff;">User: "Prepare me for my next meeting."</div>
+      </div>
+
+      <div class="three-col" style="margin-bottom: 14px;">
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-blue);">1. Collect Context</div>
+          <ul class="bullet-list">
+            <li><strong>Calendar:</strong> Apex Renewal at 10 AM</li>
+            <li><strong>Gmail:</strong> Sarah says moved to 2 PM</li>
+            <li><strong>RAG:</strong> Zenith & Apex contract history</li>
+          </ul>
+        </div>
+
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-indigo);">2. ADK Reasoning</div>
+          <ul class="bullet-list">
+            <li>Detects conflict between Email & Cal</li>
+            <li>Flags <strong>AT_RISK</strong> status to Arjun</li>
+            <li>Compiles briefing with exact quotes</li>
+          </ul>
+        </div>
+
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-emerald);">3. Action & Delivery</div>
+          <ul class="bullet-list">
+            <li>Drafts clarification to Sarah</li>
+            <li>Requests Arjun's 1-click signoff</li>
+            <li>Displays synthesis in dashboard</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-box" style="padding: 10px 16px; background: rgba(52, 211, 153, 0.05); border-color: rgba(52, 211, 153, 0.2); font-size: 12.5px; color: #a7f3d0;">
+        ✓ <strong>Core Value:</strong> The AI synthesizes messy facts across channels while keeping Arjun in full control of every commitment.
+      </div>
+
+      <div class="slide-footer">
+        <span>Slide 6 of 7</span>
+        <span>Tested across 6 assignment queries with 100% test pass rate</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 - UI, BENEFITS & CONCLUSION -->
+    <div class="slide" id="slide-7">
+      <div>
+        <div class="slide-tag">SUMMARY & CONCLUSION</div>
+        <div class="slide-heading">Executive Dashboard & Business Value</div>
+        <div class="slide-subheading">One unified cockpit for executive time recovery, commitment tracking, and operational velocity.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card-box">
+          <div class="card-box-header" style="color: var(--accent-blue);">Executive Value Delivered</div>
+          <ul class="bullet-list">
+            <li><strong>Zero Missed Promises:</strong> Cross-channel deduplication tracks what Arjun promised Raghav.</li>
+            <li><strong>Proactive Risk Mitigation:</strong> Conflict banners catch schedule mismatches before meetings start.</li>
+            <li><strong>Automated Briefings:</strong> 6 clear sections (Overdue, Today, Commitments, Waiting, Upcoming, Unclear).</li>
+            <li><strong>Factual Grounding:</strong> Verbatim evidence citations backing every answer.</li>
+          </ul>
+        </div>
+
+        <div class="card-box" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(129, 140, 248, 0.05)); border-color: rgba(56, 189, 248, 0.3); padding: 24px;">
+          <div class="card-box-header" style="font-size: 18px; color: #ffffff;">Conclusion</div>
+          <p style="font-size: 14.5px; color: #e2e8f0; line-height: 1.5; margin: 12px 0;">
+            <em>"One intelligent, grounded interface for the executive's daily workflow—turning chaos into clarity."</em>
+          </p>
+          <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: var(--font-title); font-size: 16px; font-weight: 700; color: #ffffff;">Thank You!</span>
+            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-blue);">Questions & Discussion</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Slide 7 of 7 · Technical Project Presentation Complete</span>
+        <span style="color: var(--accent-emerald); font-weight: 600;">GitHub: Shubhamjha1234/Productivity-agent</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-wrap">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 7;
+
+    function updateSlide() {
+      document.querySelectorAll('.slide').forEach((s, idx) => {
+        s.classList.toggle('active', idx + 1 === currentSlide);
+      });
+      document.getElementById('slideIndicator').innerText = `${currentSlide} / ${totalSlides}`;
+      document.getElementById('progressFill').style.width = `${(currentSlide / totalSlides) * 100}%`;
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>

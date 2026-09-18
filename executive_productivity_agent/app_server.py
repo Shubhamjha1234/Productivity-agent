@@ -208,6 +208,17 @@ async def serve_dashboard() -> HTMLResponse:
     return HTMLResponse(content=content)
 
 
+@app.get("/slides", response_class=HTMLResponse)
+async def serve_slides() -> HTMLResponse:
+    """Serves the 7-slide technical presentation deck."""
+    slides_path = Path(__file__).resolve().parent / "ui" / "slides.html"
+    if not slides_path.exists():
+        raise HTTPException(status_code=404, detail="Slides presentation file not found.")
+    with open(slides_path, "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Run Executive Productivity Dashboard")
